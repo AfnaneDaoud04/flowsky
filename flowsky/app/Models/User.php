@@ -46,4 +46,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function projects()
+{
+    return $this->belongsToMany(Project::class)->withPivot('role')->withTimestamps();
+}
+
 }
