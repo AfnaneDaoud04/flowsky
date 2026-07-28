@@ -52,30 +52,47 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
 {
+    $this->authorize('view', $project);
     return view('projects.show', compact('project'));
 }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        //
-    }
+    public function edit(Project $project)
+{
+    $this->authorize('update', $project);
+    return view('projects.edit', compact('project'));
+}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update(Request $request, Project $project)
+{
+    $this->authorize('update', $project);
+
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
+
+    $project->update($validated);
+
+    return redirect()->route('projects.show', $project)
+        ->with('success', 'Projet mis à jour.');
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    public function destroy(Project $project)
+{
+    $this->authorize('delete', $project);
+
+    $project->delete();
+
+    return redirect()->route('projects.index')
+        ->with('success', 'Projet supprimé.');
+}
 }

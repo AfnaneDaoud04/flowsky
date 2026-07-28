@@ -19,7 +19,8 @@ class Project extends Model
     }
 
     public function roleFor(User $user): ?string
-    {
-        return $this->users->firstWhere('id', $user->id)?->pivot->role;
-    }
+ {
+    $member = $this->users->firstWhere('id', $user->id);
+    return $member?->pivot->role;
+ }
 }
