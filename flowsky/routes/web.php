@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\InvitationController;
 
 
 Route::get('/', function () {
@@ -21,6 +22,12 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('projects', ProjectController::class);
+
+    Route::post('/projects/{project}/invitations', [InvitationController::class, 'store'])
+        ->name('invitations.store');
 });
+
+Route::get('/invitations/{token}', [InvitationController::class, 'accept'])
+    ->name('invitations.accept');
 
 require __DIR__.'/auth.php';
