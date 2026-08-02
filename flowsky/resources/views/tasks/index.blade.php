@@ -16,7 +16,37 @@
            class="inline-block mb-4 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark">
             + Nouvelle tâche
         </a>
+        <form method="GET" action="{{ route('projects.tasks.index', $project) }}"
+      class="flex flex-wrap gap-3 mb-4 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm">
 
+    <select name="priority" onchange="this.form.submit()" class="border-slate-300 rounded-lg text-sm">
+        <option value="">Toutes priorités</option>
+        @foreach(['critical' => 'Critique', 'high' => 'Haute', 'medium' => 'Moyenne', 'low' => 'Basse'] as $value => $label)
+            <option value="{{ $value }}" @selected(request('priority') === $value)>{{ $label }}</option>
+        @endforeach
+    </select>
+
+    <select name="status" onchange="this.form.submit()" class="border-slate-300 rounded-lg text-sm">
+        <option value="">Tous statuts</option>
+        @foreach(['todo' => 'À faire', 'in_progress' => 'En cours', 'done' => 'Terminé'] as $value => $label)
+            <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
+        @endforeach
+    </select>
+
+    <select name="assignee" onchange="this.form.submit()" class="border-slate-300 rounded-lg text-sm">
+        <option value="">Tous les assignés</option>
+        @foreach($contributors as $contributor)
+            <option value="{{ $contributor->id }}" @selected((string) request('assignee') === (string) $contributor->id)>
+                {{ $contributor->name }}
+            </option>
+        @endforeach
+    </select>
+
+    @if(request()->hasAny(['priority', 'status', 'assignee']))
+        <a href="{{ route('projects.tasks.index', $project) }}"
+           class="text-sm text-brand self-center hover:underline">Réinitialiser</a>
+    @endif
+    </form>
         <div class="grid gap-3">
             @forelse($tasks as $task)
                 <a href="{{ route('tasks.show', $task) }}"

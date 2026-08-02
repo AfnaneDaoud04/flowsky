@@ -13,13 +13,31 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Project $project)
+   public function index(Project $project, Request $request)
 {
     $this->authorize('view', $project);
 
-    $tasks = $project->tasks()->with('assignees')->latest()->get();
+    $tasks = $project->tasks()
+        ->with('assignees')
+        ->when($request->filled('priority'), fn ($query) =>
+            $query->where('priority', $request->priority)
+        )
+        ->when($request->filled('status'), fn ($query) =>
+            $query->where('status', $request->status)
+        )
+        ->when($request->filled('assignee'), fn ($query) =>
+            $query->whereHas('assignees', fn ($q) =>
+                $q->where('users.id', $request->assignee)
+            )
+        )
+        ->latest()
+        ->get();
 
-    return view('tasks.index', compact('project', 'tasks'));
+    $contributors = $project->users()
+        ->wherePivotIn('role', ['manager', 'contributor'])
+        ->get();
+
+    return view('tasks.index', compact('project', 'tasks', 'contributors'));
 }
 
 public function create(Project $project)
