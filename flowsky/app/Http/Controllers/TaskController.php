@@ -37,19 +37,32 @@ public function create(Project $project)
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTaskRequest $request, Project $project)
+    public function store(Request $request, Project $project)
 {
     $this->authorize('create', [Task::class, $project]);
 
-    $task = $project->tasks()->create([
-        ...$request->validated(),
-        'created_by' => auth()->id(),
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'priority' => 'required|in:critical,high,medium,low',
+        'due_date' => 'nullable|date',
+        'assignees' => 'nullable|array',
+        'assignees.*' => 'exists:users,id',
     ]);
 
-    $task->assignees()->sync($request->input('assignees', []));
+    $task = $project->tasks()->create([
+        'title' => $validated['title'],
+        'description' => $validated['description'] ?? null,
+        'priority' => $validated['priority'],
+        'status' => 'todo',
+        'due_date' => $validated['due_date'] ?? null,
+        'created_by' => Auth::id(),
+    ]);
 
-    return redirect()->route('projects.show', $project)
-        ->with('success', 'Tâche créée.');
+    $task->assignees()->sync($validated['assignees'] ?? []);
+
+    return redirect()->route('projects.tasks.index', $project)
+        ->with('success', 'Tâche créée avec succès.');
 }
 
     /**
