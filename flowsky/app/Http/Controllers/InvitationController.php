@@ -33,4 +33,37 @@ class InvitationController extends Controller
 
         return back()->with('success', 'Invitation envoyée.');
     }
+
+    public function accept(string $token)
+{
+    $invitation = Invitation::where('token', $token)->firstOrFail();
+
+    // Vérifier l'expiration
+    if ($invitation->expires_at->isPast()) {
+        abort(403, 'Cette invitation a expiré.');
+    }
+
+    // Vérifier qu'elle n'a pas déjà été utilisée
+    if ($invitation->used_at !== null) {
+        abort(403, 'Cette invitation a déjà été utilisée.');
+    }
+
+    // Si l'utilisateur n'est pas connecté → on stocke l'intention et on redirige vers l'inscription
+    if (! auth()->check()) {
+        session(['invitation_token' => $token]);
+        return redirect()->route('register');
+    }
+
+    // Ajouter l'utilisateur au projet avec le rôle prévu
+    $invitation->project->users()->syncWithoutDetaching([
+        auth()->id() => ['role' => $invitation->role],
+    ]);
+
+    // Marquer l'invitation comme utilisée
+    $invitation->update(['used_at' => now()]);
+
+    return redirect()->route('projects.show', $invitation->project)
+        ->with('success', 'Vous avez rejoint le projet !');
+}
+
 }

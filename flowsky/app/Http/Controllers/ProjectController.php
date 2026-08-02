@@ -12,8 +12,10 @@ class ProjectController extends Controller
      */
     public function index()
 {
-    $projects = auth()->user()->projects;
-    return view('projects.index', compact('projects'));
+    $owned = auth()->user()->projects()->wherePivot('role', 'manager')->get();
+    $member = auth()->user()->projects()->wherePivot('role', '!=', 'manager')->get();
+
+    return view('projects.index', compact('owned', 'member'));
 }
 
     /**

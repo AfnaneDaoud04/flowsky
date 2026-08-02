@@ -16,7 +16,7 @@ return new class extends Migration
         $table->foreignId('project_id')->constrained()->cascadeOnDelete();
         $table->string('email');
         $table->string('token')->unique();
-        $table->enum('role', ['manager', 'contributor', 'client']);
+        $table->enum('role', ['manager', 'contributor', 'client'])->default('contributor');
         $table->timestamp('expires_at');
         $table->timestamp('used_at')->nullable();
         $table->timestamps();
