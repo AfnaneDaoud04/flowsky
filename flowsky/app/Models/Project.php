@@ -23,4 +23,6 @@ class Project extends Model
     $member = $this->users->firstWhere('id', $user->id);
     return $member?->pivot->role;
  }
+
+ public function tasks() { return $this->hasMany(Task::class); }
 }

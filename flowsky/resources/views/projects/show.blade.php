@@ -4,6 +4,11 @@
     @if(session('success'))
         <p style="color:green">{{ session('success') }}</p>
     @endif
+
+    <a href="{{ route('projects.tasks.create', $project) }}" class="text-brand underline">
+        + Créer une tâche
+    </a>
+
     @if($project->roleFor(auth()->user()) === 'manager')
     <div class="mt-6 border-t pt-4">
         <h2 class="font-semibold mb-2">Inviter un membre</h2>
