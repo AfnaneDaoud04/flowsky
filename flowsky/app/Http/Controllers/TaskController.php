@@ -6,30 +6,32 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+   public function index(Project $project)
+{
+    $this->authorize('view', $project);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Project $project)
+    $tasks = $project->tasks()->with('assignees')->latest()->get();
+
+    return view('tasks.index', compact('project', 'tasks'));
+}
+
+public function create(Project $project)
 {
     $this->authorize('create', [Task::class, $project]);
 
-    // seuls les contributeurs (et managers) du projet peuvent être assignés
-    $assignableUsers = $project->users()
+    // Seuls les contributeurs (et managers) du projet peuvent être assignés
+    $contributors = $project->users()
         ->wherePivotIn('role', ['manager', 'contributor'])
         ->get();
 
-    return view('tasks.create', compact('project', 'assignableUsers'));
+    return view('tasks.create', compact('project', 'contributors'));
 }
 
     /**
