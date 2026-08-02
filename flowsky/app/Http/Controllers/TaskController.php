@@ -106,6 +106,19 @@ public function create(Project $project)
     {
         //
     }
+    
+    public function updateStatus(Request $request, Task $task)
+{
+    $this->authorize('update', $task);
+
+    $validated = $request->validate([
+        'status' => 'required|in:todo,in_progress,done',
+    ]);
+
+    $task->update(['status' => $validated['status']]);
+
+    return back()->with('success', 'Statut mis à jour.');
+}
 
     /**
      * Remove the specified resource from storage.

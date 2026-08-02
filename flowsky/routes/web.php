@@ -29,7 +29,10 @@ Route::middleware('auth')->group(function () {
         ->name('invitations.store');
 
     Route::resource('projects.tasks', TaskController::class)->shallow();
-
+    
+    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
+        ->name('tasks.updateStatus');
+        
     Route::get('/my-tasks', [MyTasksController::class, 'index'])->name('my-tasks.index');
 });
 
