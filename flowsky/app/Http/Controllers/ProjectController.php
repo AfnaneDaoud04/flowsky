@@ -55,7 +55,10 @@ class ProjectController extends Controller
     public function show(Project $project)
 {
     $this->authorize('view', $project);
-    return view('projects.show', compact('project'));
+
+    $tasks = $project->tasks()->with('assignees')->latest()->get();
+
+    return view('projects.show', compact('project', 'tasks'));
 }
 
     /**

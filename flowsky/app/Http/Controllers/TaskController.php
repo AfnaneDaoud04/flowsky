@@ -86,10 +86,12 @@ public function create(Project $project)
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    public function show(Task $task)
+{
+    $this->authorize('view', $task);
+
+    return view('projects.tasks.show', compact('task'));
+}
 
     /**
      * Show the form for editing the specified resource.

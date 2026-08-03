@@ -6,7 +6,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\MyTasksController;
-
+use App\Http\Controllers\NoteController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,9 +32,13 @@ Route::middleware('auth')->group(function () {
     
     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
         ->name('tasks.updateStatus');
-        
+
     Route::get('/my-tasks', [MyTasksController::class, 'index'])->name('my-tasks.index');
-});
+
+     Route::post('/tasks/{task}/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+
+    });
 
 Route::get('/invitations/{token}', [InvitationController::class, 'accept'])
     ->name('invitations.accept');

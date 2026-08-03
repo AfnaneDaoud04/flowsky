@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
@@ -17,4 +17,8 @@ class Task extends Model
     {
         return $this->due_date && $this->due_date->isPast() && $this->status !== 'done';
     }
+    public function notes(): HasMany
+{
+    return $this->hasMany(Note::class)->latest();
+}
 }
