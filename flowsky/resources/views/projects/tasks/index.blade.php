@@ -16,6 +16,11 @@
            class="inline-block mb-4 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand-dark">
             + Nouvelle tâche
         </a>
+
+        <a href="{{ route('projects.kanban', $project) }}"
+       class="inline-block px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+        Vue Kanban
+    </a>
         <form method="GET" action="{{ route('projects.tasks.index', $project) }}"
       class="flex flex-wrap gap-3 mb-4 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm">
 

@@ -129,4 +129,19 @@ public function create(Project $project)
     {
         //
     }
+
+    public function kanban(Project $project)
+{
+    $this->authorize('view', $project);
+
+    $tasks = $project->tasks()->with('assignees')->get();
+
+    $tasksByStatus = [
+        'todo' => $tasks->where('status', 'todo'),
+        'in_progress' => $tasks->where('status', 'in_progress'),
+        'done' => $tasks->where('status', 'done'),
+    ];
+
+    return view('projects.tasks.kanban', compact('project', 'tasksByStatus'));
+}
 }

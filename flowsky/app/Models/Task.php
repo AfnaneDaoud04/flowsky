@@ -3,6 +3,7 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Task extends Model
 {
@@ -11,8 +12,10 @@ class Task extends Model
 
     public function project() { return $this->belongsTo(Project::class); }
     public function creator() { return $this->belongsTo(User::class, 'created_by'); }
-    public function assignees() { return $this->belongsToMany(User::class, 'task_user'); }
-
+    public function assignees(): BelongsToMany
+{
+    return $this->belongsToMany(User::class, 'task_user');
+}
     public function isOverdue(): bool
     {
         return $this->due_date && $this->due_date->isPast() && $this->status !== 'done';

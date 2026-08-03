@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
         ->name('invitations.store');
 
     Route::resource('projects.tasks', TaskController::class)->shallow();
-    
+    Route::get('/projects/{project}/kanban', [TaskController::class, 'kanban'])->name('projects.kanban');
     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
         ->name('tasks.updateStatus');
 
@@ -37,7 +37,8 @@ Route::middleware('auth')->group(function () {
 
      Route::post('/tasks/{task}/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
-
+    
+    
     });
 
 Route::get('/invitations/{token}', [InvitationController::class, 'accept'])
