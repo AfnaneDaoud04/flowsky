@@ -134,14 +134,17 @@ public function create(Project $project)
 {
     $this->authorize('view', $project);
 
-    $tasks = $project->tasks()->with('assignees')->get();
+    $tasks = $project->tasks()
+        ->with('assignees')
+        ->get()
+        ->groupBy('status');
 
-    $tasksByStatus = [
-        'todo' => $tasks->where('status', 'todo'),
-        'in_progress' => $tasks->where('status', 'in_progress'),
-        'done' => $tasks->where('status', 'done'),
+    $columns = [
+        'todo' => $tasks->get('todo', collect()),
+        'in_progress' => $tasks->get('in_progress', collect()),
+        'done' => $tasks->get('done', collect()),
     ];
 
-    return view('projects.tasks.kanban', compact('project', 'tasksByStatus'));
+    return view('projects.kanban', compact('project', 'columns'));
 }
 }

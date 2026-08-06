@@ -8,7 +8,11 @@
     <a href="{{ route('projects.tasks.create', $project) }}" class="text-brand underline">
         + Créer une tâche
     </a>
-
+    <br>
+    <a href="{{ route('projects.kanban', $project) }}"
+   class="text-sm font-medium text-brand hover:text-brand-dark">
+    Vue Kanban →
+   </a>
     <div class="mt-6 grid gap-3">
         @forelse($tasks as $task)
             <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4">
