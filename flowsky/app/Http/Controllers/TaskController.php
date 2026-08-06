@@ -113,13 +113,16 @@ public function create(Project $project)
 {
     $this->authorize('update', $task);
 
-    $validated = $request->validate([
+    $request->validate([
         'status' => 'required|in:todo,in_progress,done',
     ]);
 
-    $task->update(['status' => $validated['status']]);
+    $task->update(['status' => $request->status]);
 
-    return back()->with('success', 'Statut mis à jour.');
+    return response()->json([
+        'success' => true,
+        'status' => $task->status,
+    ]);
 }
 
     /**

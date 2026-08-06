@@ -57,3 +57,27 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+function moveTask(taskId, newStatus, buttonEl) {
+    fetch(`/tasks/${taskId}/status`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Erreur lors du déplacement');
+        return response.json();
+    })
+    .then(data => {
+        window.location.reload(); // version simple : on recharge pour repositionner la carte
+    })
+    .catch(error => {
+        alert('Impossible de déplacer la tâche.');
+        console.error(error);
+    });
+}
+</script>

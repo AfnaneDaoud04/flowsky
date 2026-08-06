@@ -7,9 +7,21 @@
     ];
     $p = $priorityConfig[$task->priority];
     $isLate = $task->due_date && $task->due_date->isPast() && $task->status !== 'done';
+
+    $nextStatus = [
+        'todo' => 'in_progress',
+        'in_progress' => 'done',
+        'done' => null,
+    ];
+    $prevStatus = [
+        'todo' => null,
+        'in_progress' => 'todo',
+        'done' => 'in_progress',
+    ];
 @endphp
 
-<div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow">
+<div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow"
+     x-data="{ loading: false }">
 
     {{-- Badge priorité --}}
     <span class="{{ $p['bg'] }} {{ $p['text'] }} text-xs font-medium px-3 py-1 rounded-full inline-flex items-center gap-1.5 mb-2">
@@ -39,5 +51,30 @@
             </span>
         @endif
     </div>
+
+    {{-- Boutons de déplacement --}}
+    @can('update', $task)
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+            @if ($prevStatus[$task->status])
+                <button
+                    @click="loading = true; moveTask({{ $task->id }}, '{{ $prevStatus[$task->status] }}', $el)"
+                    :disabled="loading"
+                    class="text-xs text-slate-400 hover:text-brand disabled:opacity-50">
+                    ← Précédent
+                </button>
+            @else
+                <span></span>
+            @endif
+
+            @if ($nextStatus[$task->status])
+                <button
+                    @click="loading = true; moveTask({{ $task->id }}, '{{ $nextStatus[$task->status] }}', $el)"
+                    :disabled="loading"
+                    class="text-xs font-medium text-brand hover:text-brand-dark disabled:opacity-50">
+                    Suivant →
+                </button>
+            @endif
+        </div>
+    @endcan
 
 </div>
