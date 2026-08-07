@@ -21,4 +21,8 @@ class NotePolicy
 
         return $isAuthor || $isManager;
     }
+    public function react(User $user, Note $note)
+{
+    return $note->task->project->roleFor($user) !== null;
+}
 }

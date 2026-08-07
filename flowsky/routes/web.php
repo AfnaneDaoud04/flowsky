@@ -30,7 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/projects/{project}/invitations', [InvitationController::class, 'store'])
         ->name('invitations.store');
 
-
+    Route::post('/notes/{note}/reactions', [NoteReactionController::class, 'toggle'])
+    ->name('notes.reactions.toggle');
     Route::resource('projects.tasks', TaskController::class)->shallow();
     Route::get('/projects/{project}/kanban', [TaskController::class, 'kanban'])->name('projects.kanban');
     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])

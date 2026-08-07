@@ -19,4 +19,8 @@ class Note extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function reactions()
+{
+    return $this->hasMany(NoteReaction::class);
+}
 }
