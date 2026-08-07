@@ -25,4 +25,8 @@ class Project extends Model
  }
 
  public function tasks() { return $this->hasMany(Task::class); }
+ public function activities(): \Illuminate\Database\Eloquent\Relations\HasMany
+{
+    return $this->hasMany(Activity::class)->latest();
+}
 }

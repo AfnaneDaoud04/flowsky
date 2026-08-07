@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Events\TaskCreated;
 
 class TaskController extends Controller
 {
@@ -55,7 +56,7 @@ public function create(Project $project)
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Project $project)
+public function store(Request $request, Project $project)
 {
     $this->authorize('create', [Task::class, $project]);
 
@@ -69,17 +70,16 @@ public function create(Project $project)
     ]);
 
     $task = $project->tasks()->create([
-        'title' => $validated['title'],
-        'description' => $validated['description'] ?? null,
-        'priority' => $validated['priority'],
+        ...$validated,
         'status' => 'todo',
-        'due_date' => $validated['due_date'] ?? null,
-        'created_by' => Auth::id(),
+        'created_by' => auth()->id(),
     ]);
 
     $task->assignees()->sync($validated['assignees'] ?? []);
 
-    return redirect()->route('projects.tasks.index', $project)
+    event(new TaskCreated($task));
+
+    return redirect()->route('projects.show', $project)
         ->with('success', 'Tâche créée avec succès.');
 }
 
