@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Events\TaskCreated;
+use App\Events\TaskStatusChanged;
 
 class TaskController extends Controller
 {
@@ -117,7 +118,13 @@ public function store(Request $request, Project $project)
         'status' => 'required|in:todo,in_progress,done',
     ]);
 
+    $oldStatus = $task->status;
+
     $task->update(['status' => $request->status]);
+
+    if ($oldStatus !== $task->status) {
+        event(new TaskStatusChanged($task, $oldStatus, $task->status));
+    }
 
     return response()->json([
         'success' => true,

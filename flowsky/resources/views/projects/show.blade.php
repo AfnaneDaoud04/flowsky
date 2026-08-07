@@ -72,4 +72,36 @@
         </form>
     </div>
     @endif
+
+    {{-- Fil d'activité --}}
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-5 mt-6">
+        <h2 class="font-semibold text-slate-900 dark:text-white mb-4">
+            Fil d'activité
+        </h2>
+
+        <div class="space-y-4">
+            @forelse ($project->activities as $activity)
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-brand-light dark:bg-slate-700 flex items-center justify-center text-brand text-xs font-semibold shrink-0">
+                        {{ strtoupper(substr($activity->user->name, 0, 2)) }}
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm text-slate-700 dark:text-slate-300">
+                            <span class="font-medium text-slate-900 dark:text-white">
+                                {{ $activity->user->name }}
+                            </span>
+                            {{ $activity->description }}
+                        </p>
+                        <p class="text-xs text-slate-400 mt-0.5">
+                            {{ $activity->created_at->diffForHumans() }}
+                        </p>
+                    </div>
+                </div>
+            @empty
+                <p class="text-sm text-slate-400 text-center py-6">
+                    Aucune activité pour le moment
+                </p>
+            @endforelse
+        </div>
+    </div>
 </x-app-layout>

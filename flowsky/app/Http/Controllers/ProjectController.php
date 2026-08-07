@@ -58,6 +58,8 @@ class ProjectController extends Controller
 
     $tasks = $project->tasks()->with('assignees')->latest()->get();
 
+    $project->load(['activities.user']); // eager loading pour éviter le N+1
+
     return view('projects.show', compact('project', 'tasks'));
 }
 

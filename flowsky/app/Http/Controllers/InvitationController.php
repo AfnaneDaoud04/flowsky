@@ -7,6 +7,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Events\MemberAdded;
 
 class InvitationController extends Controller
 {
@@ -55,9 +56,15 @@ class InvitationController extends Controller
     }
 
     // Ajouter l'utilisateur au projet avec le rôle prévu
+    $alreadyMember = $invitation->project->users->contains(auth()->id());
+
     $invitation->project->users()->syncWithoutDetaching([
         auth()->id() => ['role' => $invitation->role],
     ]);
+
+    if (! $alreadyMember) {
+        event(new MemberAdded($invitation->project, auth()->user(), $invitation->role));
+    }
 
     // Marquer l'invitation comme utilisée
     $invitation->update(['used_at' => now()]);
