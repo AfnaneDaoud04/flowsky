@@ -64,6 +64,8 @@ class InvitationController extends Controller
 
     if (! $alreadyMember) {
         event(new MemberAdded($invitation->project, auth()->user(), $invitation->role));
+
+        auth()->user()->notify(new \App\Notifications\AddedToProject($invitation->project, $invitation->role));
     }
 
     // Marquer l'invitation comme utilisée

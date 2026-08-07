@@ -8,6 +8,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\MyTasksController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\KanbanController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/projects/{project}/invitations', [InvitationController::class, 'store'])
         ->name('invitations.store');
 
+
     Route::resource('projects.tasks', TaskController::class)->shallow();
     Route::get('/projects/{project}/kanban', [TaskController::class, 'kanban'])->name('projects.kanban');
     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
@@ -38,8 +40,11 @@ Route::middleware('auth')->group(function () {
 
      Route::post('/tasks/{task}/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
-    
-    
+
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
+        ->name('notifications.markAllRead');
+
+
     });
 
 Route::get('/invitations/{token}', [InvitationController::class, 'accept'])

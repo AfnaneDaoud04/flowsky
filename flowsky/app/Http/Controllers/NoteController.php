@@ -21,7 +21,16 @@ class NoteController extends Controller
         'user_id' => auth()->id(),
         'content' => $validated['content'],
     ]);
+    
+    $involvedUsers = $task->assignees
+        ->push($task->creator)
+        ->unique('id')
+        ->reject(fn ($user) => $user->id === auth()->id());
 
+    foreach ($involvedUsers as $user) {
+        $user->notify(new \App\Notifications\NewNoteAdded($note));
+    }
+    
     event(new NoteAdded($note));
 
     return back()->with('success', 'Note ajoutée.');

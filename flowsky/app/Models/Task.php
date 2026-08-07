@@ -11,7 +11,6 @@ class Task extends Model
     protected $casts = ['due_date' => 'date'];
 
     public function project() { return $this->belongsTo(Project::class); }
-    public function creator() { return $this->belongsTo(User::class, 'created_by'); }
     public function assignees(): BelongsToMany
 {
     return $this->belongsToMany(User::class, 'task_user');
@@ -23,5 +22,9 @@ class Task extends Model
     public function notes(): HasMany
 {
     return $this->hasMany(Note::class)->latest();
+}
+    public function creator()
+{
+    return $this->belongsTo(User::class, 'created_by');
 }
 }
