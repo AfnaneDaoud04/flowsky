@@ -70,13 +70,23 @@ public function store(Request $request, Project $project)
         'assignees.*' => 'exists:users,id',
     ]);
 
+    $assigneeIds = $validated['assignees'] ?? [];
+    unset($validated['assignees']);
+
     $task = $project->tasks()->create([
         ...$validated,
         'status' => 'todo',
         'created_by' => auth()->id(),
     ]);
 
-    $task->assignees()->sync($validated['assignees'] ?? []);
+    $task->assignees()->sync($assigneeIds);
+
+    foreach ($task->assignees as $assignee) {
+        // On ne notifie pas l'utilisateur s'il s'est assigné la tâche à lui-même
+        if ($assignee->id !== auth()->id()) {
+            $assignee->notify(new \App\Notifications\TaskAssigned($task));
+        }
+    }
 
     event(new TaskCreated($task));
 
@@ -105,10 +115,45 @@ public function store(Request $request, Project $project)
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function update(Request $request, Task $task)
+{
+    $this->authorize('update', $task);
+
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'priority' => 'required|in:critical,high,medium,low',
+        'due_date' => 'nullable|date',
+        'assignees' => 'nullable|array',
+        'assignees.*' => 'exists:users,id',
+    ]);
+
+    $newAssigneeIds = $validated['assignees'] ?? [];
+    unset($validated['assignees']);
+
+    // On garde la liste des anciens assignés AVANT la mise à jour
+    $oldAssigneeIds = $task->assignees()->pluck('users.id')->toArray();
+
+    $task->update($validated);
+
+    $task->assignees()->sync($newAssigneeIds);
+
+    // On ne notifie que les nouveaux assignés (évite les doublons)
+    $addedIds = array_diff($newAssigneeIds, $oldAssigneeIds);
+
+    if (!empty($addedIds)) {
+        $newlyAssigned = \App\Models\User::whereIn('id', $addedIds)->get();
+
+        foreach ($newlyAssigned as $assignee) {
+            if ($assignee->id !== auth()->id()) {
+                $assignee->notify(new \App\Notifications\TaskAssigned($task));
+            }
+        }
     }
+
+    return redirect()->route('projects.show', $task->project)
+        ->with('success', 'Tâche mise à jour avec succès.');
+}
     
     public function updateStatus(Request $request, Task $task)
 {
