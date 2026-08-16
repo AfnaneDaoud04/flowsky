@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        @include('projects.tasks.partials.notes', ['task' => $task])
+        @include('tasks.partials.notes', ['task' => $task])
 
     </div>
 </x-app-layout>

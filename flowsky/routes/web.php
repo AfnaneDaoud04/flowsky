@@ -9,14 +9,12 @@ use App\Http\Controllers\MyTasksController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NoteReactionController;
+use App\Http\Controllers\ActivityController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -45,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
         ->name('notifications.markAllRead');
 
+    Route::get('/activity', [ActivityController::class, 'index'])->name('activity.index');
 
     });
 

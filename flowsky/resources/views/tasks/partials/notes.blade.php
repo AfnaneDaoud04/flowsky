@@ -86,4 +86,3 @@
             <p class="text-slate-500 text-sm">Aucune note pour l'instant.</p>
         @endforelse
     </div>
-</div>

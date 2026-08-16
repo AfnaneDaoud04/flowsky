@@ -101,7 +101,7 @@ public function store(Request $request, Project $project)
 {
     $this->authorize('view', $task);
 
-    return view('projects.tasks.show', compact('task'));
+    return view('tasks.show', compact('task'));
 }
 
     /**

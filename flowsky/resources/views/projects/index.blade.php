@@ -24,19 +24,12 @@
                         @foreach ($owned as $project)
                             @php
                                 $role = $project->roleFor(auth()->user());
-                                $badgeClasses = match($role) {
-                                    'manager' => 'bg-teal-100 text-teal-700',
-                                    'contributor' => 'bg-blue-100 text-blue-700',
-                                    'client' => 'bg-purple-100 text-purple-700',
-                                };
                             @endphp
 
                             <a href="{{ route('projects.show', $project) }}"
                                class="block bg-white dark:bg-slate-800 rounded-xl shadow-sm p-5 hover:shadow-md transition">
                                 <div class="flex items-start justify-between mb-2">
-                                    <span class="{{ $badgeClasses }} rounded-full px-3 py-1 text-xs font-medium">
-                                        {{ ucfirst($role) }}
-                                    </span>
+                                    <x-role-badge :role="$role" />
                                 </div>
                                 <h3 class="font-bold text-slate-900 dark:text-white">{{ $project->name }}</h3>
                                 <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 mt-1">
@@ -61,19 +54,12 @@
                         @foreach ($member as $project)
                             @php
                                 $role = $project->roleFor(auth()->user());
-                                $badgeClasses = match($role) {
-                                    'manager' => 'bg-teal-100 text-teal-700',
-                                    'contributor' => 'bg-blue-100 text-blue-700',
-                                    'client' => 'bg-purple-100 text-purple-700',
-                                };
                             @endphp
 
                             <a href="{{ route('projects.show', $project) }}"
                                class="block bg-white dark:bg-slate-800 rounded-xl shadow-sm p-5 hover:shadow-md transition">
                                 <div class="flex items-start justify-between mb-2">
-                                    <span class="{{ $badgeClasses }} rounded-full px-3 py-1 text-xs font-medium">
-                                        {{ ucfirst($role) }}
-                                    </span>
+                                    <x-role-badge :role="$role" />
                                 </div>
                                 <h3 class="font-bold text-slate-900 dark:text-white">{{ $project->name }}</h3>
                                 <p class="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 mt-1">

@@ -1,45 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Note;
-use App\Models\NoteReaction;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class NoteReactionController extends Controller
+class NoteReaction extends Model
 {
-    public function toggle(Request $request, Note $note)
+    protected $fillable = [
+        'note_id',
+        'user_id',
+        'emoji',
+    ];
+
+    public function note(): BelongsTo
     {
-        $validated = $request->validate([
-            'emoji' => 'required|string|max:10',
-        ]);
+        return $this->belongsTo(Note::class);
+    }
 
-        $existing = NoteReaction::where('note_id', $note->id)
-            ->where('user_id', auth()->id())
-            ->where('emoji', $validated['emoji'])
-            ->first();
-
-        if ($existing) {
-            $existing->delete();
-            $reacted = false;
-        } else {
-            NoteReaction::create([
-                'note_id' => $note->id,
-                'user_id' => auth()->id(),
-                'emoji'   => $validated['emoji'],
-            ]);
-            $reacted = true;
-        }
-
-        // Regroupe les réactions par emoji avec leur compteur, pour rafraîchir l'affichage côté client
-        $counts = $note->reactions()
-            ->selectRaw('emoji, count(*) as count')
-            ->groupBy('emoji')
-            ->pluck('count', 'emoji');
-
-        return response()->json([
-            'reacted' => $reacted,
-            'counts'  => $counts,
-        ]);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

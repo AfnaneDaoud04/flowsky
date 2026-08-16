@@ -31,10 +31,10 @@
                 <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-start gap-3
                     {{ is_null($notification->read_at) ? 'bg-brand-light/50 dark:bg-teal-900/20' : '' }}">
 
-                    <span class="text-xl">
-                        @if(str_contains($notification->type, 'TaskAssigned')) 👋
-                        @elseif(str_contains($notification->type, 'NewNoteAdded')) 💬
-                        @elseif(str_contains($notification->type, 'AddedToProject')) 📋
+                    <span class="text-xl text-brand-dark">
+                        @if(str_contains($notification->type, 'TaskAssigned')) <i class="ti ti-hand"></i>
+                        @elseif(str_contains($notification->type, 'NewNoteAdded')) <i class="ti ti-message-circle"></i>
+                        @elseif(str_contains($notification->type, 'AddedToProject')) <i class="ti ti-clipboard-list"></i>
                         @endif
                     </span>
 
