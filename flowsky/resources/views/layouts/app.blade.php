@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Flowsky') }}</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M13 2L4 14h6l-1 8 9-12h-6l1-8z' fill='%233D8B89' stroke='%233D8B89' stroke-width='1.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
     <script>
         if (localStorage.getItem('darkMode') === 'true') {
             document.documentElement.classList.add('dark');
@@ -38,13 +39,15 @@
                     <i class="ti ti-clipboard-list"></i> Projects
                 </a>
 
-                <a href="{{ route('my-tasks.index') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
-                          {{ request()->routeIs('my-tasks.*')
-                              ? 'bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400'
-                              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
-                    <i class="ti ti-checkbox"></i> My Tasks
-                </a>
+                @if (auth()->user()->hasAssignableRole())
+    <a href="{{ route('my-tasks.index') }}"
+       class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
+              {{ request()->routeIs('my-tasks.*')
+                  ? 'bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+        <i class="ti ti-checkbox"></i> My Tasks
+    </a>
+@endif
 
                 <a href="{{ route('activity.index') }}"
                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium

@@ -59,4 +59,11 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+ public function hasAssignableRole(): bool
+{
+    return $this->projects()
+        ->wherePivotIn('role', ['manager', 'contributor'])
+        ->exists();
+}
+
 }

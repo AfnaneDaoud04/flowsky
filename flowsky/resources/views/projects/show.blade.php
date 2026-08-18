@@ -10,10 +10,12 @@
     </x-slot>
 
     <div class="flex items-center gap-3 mb-6">
+        @can('create', [App\Models\Task::class, $project])
         <a href="{{ route('projects.tasks.create', $project) }}"
            class="px-4 py-2 bg-brand hover:bg-brand-dark text-white rounded-lg text-sm font-medium">
             + Créer une tâche
         </a>
+    @endcan
         <a href="{{ route('projects.tasks.index', $project) }}"
            class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-white rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700">
             Liste des tâches
