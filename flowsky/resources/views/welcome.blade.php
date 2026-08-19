@@ -24,7 +24,7 @@
         </div>
     </header>
 
-    <section class="text-center px-8 pt-16 pb-12 bg-gradient-to-b from-brand-light to-white">
+    <section class="text-center px-8 pt-16 pb-6 bg-gradient-to-b from-brand-light to-white">
         <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3.5">
             Organisez vos projets,<br>sans friction.
         </h1>
@@ -43,7 +43,7 @@
         </div>
     </section>
 
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 py-14 max-w-4xl mx-auto">
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 pt-6 pb-14 max-w-4xl mx-auto">
         <div class="text-center">
             <div class="w-11 h-11 rounded-xl bg-brand-light flex items-center justify-center mx-auto mb-3">
                 <i class="ti ti-layout-kanban text-2xl text-brand-dark"></i>
@@ -60,10 +60,10 @@
         </div>
         <div class="text-center">
             <div class="w-11 h-11 rounded-xl bg-orange-50 flex items-center justify-center mx-auto mb-3">
-                <i class="ti ti-bell text-2xl text-orange-700"></i>
+                <i class="ti ti-activity text-2xl text-orange-700"></i>
             </div>
-            <p class="font-medium text-sm mb-1">Notifications en temps réel</p>
-            <p class="text-xs text-slate-500">Ne manquez plus jamais une mise à jour importante.</p>
+            <p class="font-medium text-sm mb-1">Suivi d'activité</p>
+            <p class="text-xs text-slate-500">Visualisez chaque action de votre équipe en temps réel.</p>
         </div>
     </section>
 

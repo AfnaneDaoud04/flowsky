@@ -45,18 +45,29 @@
                         </p>
                     @endif
 
-                    @can('update', $task)
-                        <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="mt-3 flex items-center gap-2">
-                            @csrf
-                            @method('PATCH')
-                            <select name="status" onchange="this.form.submit()"
-                                class="border-slate-300 rounded-lg text-sm focus:ring-brand">
-                                <option value="todo" @selected($task->status === 'todo')>À faire</option>
-                                <option value="in_progress" @selected($task->status === 'in_progress')>En cours</option>
-                                <option value="done" @selected($task->status === 'done')>Terminé</option>
-                            </select>
-                        </form>
-                    @endcan
+@can('update', $task)
+    <div class="mt-3 flex items-center gap-2">
+        <select
+            x-data
+            @change="
+                fetch('{{ route('tasks.updateStatus', $task) }}', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+                    },
+                    body: JSON.stringify({ status: $event.target.value })
+                })
+                .then(res => res.json())
+                .then(data => { if (!data.success) alert('Erreur lors de la mise à jour du statut') })
+            "
+            class="border-slate-300 rounded-lg text-sm focus:ring-brand">
+            <option value="todo" @selected($task->status === 'todo')>À faire</option>
+            <option value="in_progress" @selected($task->status === 'in_progress')>En cours</option>
+            <option value="done" @selected($task->status === 'done')>Terminé</option>
+        </select>
+    </div>
+@endcan
                 </div>
             @empty
                 <p class="text-slate-500 dark:text-slate-400">Aucune tâche assignée pour l'instant.</p>
